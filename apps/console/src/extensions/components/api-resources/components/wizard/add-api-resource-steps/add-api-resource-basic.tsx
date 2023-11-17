@@ -25,7 +25,7 @@ import { useSelector } from "react-redux";
 import { Grid } from "semantic-ui-react";
 import { AppState } from "../../../../../../features/core/store";
 import { ExtendedFeatureConfigInterface } from "../../../../../configs/models";
-import { getAPIResourcesForIdenitifierValidation } from "../../../api";
+import { getAPIResourcesForIdentifierValidation } from "../../../api";
 import { APIResourcesConstants } from "../../../constants";
 import { APIResourcesListInterface, BasicAPIResourceInterface } from "../../../models";
 
@@ -132,7 +132,7 @@ export const AddAPIResourceBasic: FunctionComponent<AddAPIResourceBasicInterface
                                     const filter: string = "identifier eq " + value;
 
                                     const response: APIResourcesListInterface = 
-                                        await getAPIResourcesForIdenitifierValidation(filter);
+                                        await getAPIResourcesForIdentifierValidation(filter);
     
                                     if (response?.apiResources?.length > 0) {
                                         validation.isValid = false;

@@ -41,7 +41,7 @@ const httpClient: HttpClientInstance = AsgardeoSPAClient.getInstance()
  * @param filter - filter.
  * @returns `Promise<APIResourcesListInterface | IdentityAppsApiException>`
  */
-export const getAPIResourcesForIdenitifierValidation = (
+export const getAPIResourcesForIdentifierValidation = (
     filter: string
 ): Promise<APIResourcesListInterface> => {
 
