@@ -17,7 +17,7 @@
  */
 
 import { ExtendedFeatureResourceEndpointsInterface } from "./models";
-import { DeploymentConfigInterface, store } from "../../features/core";
+import { DeploymentConfigInterface } from "../../features/core";
 
 /**
  * Get the resource endpoints for the extended features.
@@ -28,11 +28,8 @@ import { DeploymentConfigInterface, store } from "../../features/core";
 export const getExtendedFeatureResourceEndpoints = (serverHost: string,
     deploymentConfig: DeploymentConfigInterface): ExtendedFeatureResourceEndpointsInterface => {
 
-    const orgId: string = store.getState().organization.organization.id;
-    const authzServiceHost: string = deploymentConfig.extensions?.authzServiceHost as string;
-
     return {
-        authzEndpoint: `${ authzServiceHost }/o/${ orgId }`,
+        apiResources: `${ serverHost }/api/server/v1/api-resources`,
         choreoEventingEndpoint: deploymentConfig.extensions?.choreoEventingEndpoint as string,
         diagnosticLogsEndpoint: `${ serverHost }/api/asgardeo/v1/logs/diagnostics/search`,
         emailManagement: `${ serverHost }/api/server/v1/email`,
@@ -44,6 +41,7 @@ export const getExtendedFeatureResourceEndpoints = (serverHost: string,
         organizationEndpoint: `${ serverHost }/api/asgardeo-enterprise-login/v1/business-user-login/{organization}`,
         organizationPatchEndpoint: `${ serverHost }/api/asgardeo-enterprise-login/v1/business-user-login`,
         resendEndpoint: `${ serverHost }/api/asgardeo-guest/v1/users/invite/{}/resend`,
+        scopes: `${ serverHost }/api/server/v1/scopes`,
         smsProviderEndpoint: `${ serverHost }/api/server/v1/notification-senders/sms`,
         userEndpoint: `${ serverHost }/api/asgardeo-guest/v1/users`,
         userStoreAgentConnection: `${ serverHost }/api/onprem-userstore/v1/connection`,

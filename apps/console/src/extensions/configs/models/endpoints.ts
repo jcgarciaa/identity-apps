@@ -70,12 +70,17 @@ export interface ExtendedFeatureResourceEndpointsInterface {
     notificationSendersEndPoint: string;
 
     /**
-     * Authorization Service API endpoint.
-     */
-    authzEndpoint: string;
-
-    /**
      * Email management API endpoint.
      */
     emailManagement: string;
+
+    /**
+     * API Resources API endpoint.
+     */
+    apiResources: string;
+
+    /**
+     * Scopes API endpoint.
+     */
+    scopes: string;
 }

@@ -25,8 +25,12 @@ import useRequest, {
     RequestResultInterface
 } from "../../core/hooks/use-request";
 import { store } from "../../core/store";
-import { APIResourceInterface, APIResourcePermissionInterface, APIResourcesListInterface, UpdatedAPIResourceInterface }
-    from "../models";
+import {
+    APIResourceInterface,
+    APIResourcePermissionInterface,
+    APIResourcesListInterface,
+    UpdatedAPIResourceInterface
+} from "../models";
 
 /**
  * Get an axios instance.
@@ -93,7 +97,8 @@ export const getAPIResourcesForIdentifierValidation = (
 export const useAPIResources = <Data = APIResourcesListInterface, Error = RequestErrorInterface>(
     after?: string,
     before?: string,
-    filter?: string
+    filter?: string,
+    limit?: number
 ): RequestResultInterface<Data, Error> => {
 
     const requestConfig: AxiosRequestConfig = {
@@ -105,7 +110,8 @@ export const useAPIResources = <Data = APIResourcesListInterface, Error = Reques
         params: {
             after,
             before,
-            filter
+            filter,
+            limit
         },
         url: `${store.getState().config.endpoints.apiResources}`
     };
