@@ -75,6 +75,11 @@ export interface ExtendedFeatureResourceEndpointsInterface {
     emailManagement: string;
 
     /**
+     * Application management API endpoint.
+     */
+    applications: string;
+
+    /**
      * API Resources API endpoint.
      */
     apiResources: string;

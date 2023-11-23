@@ -84,7 +84,7 @@ export const AuthorizeAPIResource: FunctionComponent<AuthorizeAPIResourcePropsIn
     const dispatch: Dispatch = useDispatch();
     const { getLink } = useDocumentation();
 
-    const [ allAPIResourcesListData, setAllAPIResourcesListData ] = useState<APIResourceInterface[]>([]);
+//    const [ allAPIResourcesListData, setAllAPIResourcesListData ] = useState<APIResourceInterface[]>([]);
     const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
     const [ isAPIResourcesListLoading, setIsAPIResourcesListLoading ] = useState<boolean>(false);
     const [ apiCallNextAfterValue, setAPICallNextAfterValue ] = useState<string>(null);
@@ -111,7 +111,7 @@ export const AuthorizeAPIResource: FunctionComponent<AuthorizeAPIResourcePropsIn
         isLoading: iscurrentAPIResourcesListLoading,
         error: currentAPIResourcesFetchRequestError,
         mutate: mutatecurrentAPIResourcesList
-    } = useAPIResources(apiCallNextAfterValue);
+    } = useAPIResources(apiCallNextAfterValue, null, "name co XXXX", 100);
 
     const {
         data: currentAPIResourceScopeListData,
@@ -134,7 +134,8 @@ export const AuthorizeAPIResource: FunctionComponent<AuthorizeAPIResourcePropsIn
             }));
             closeWizard();
         }
-    }, [ currentAPIResourcesFetchRequestError ]);
+//    }, [ currentAPIResourcesFetchRequestError ]);
+    }, [ currentAPIResourceScopeListFetchError ]);
 
     /**
      * Assign all the API resources to the dropdown options if the after value is not null. 
@@ -144,11 +145,12 @@ export const AuthorizeAPIResource: FunctionComponent<AuthorizeAPIResourcePropsIn
             setIsAPIResourcesListLoading(true);
         }
 
-        let afterValue: string;
+//        let afterValue: string;
 
-        if (currentAPIResourcesListData) {
+//        if (currentAPIResourcesListData) {
             const filteredDropdownItemOptions: DropdownItemProps[] =
-                (currentAPIResourcesListData?.apiResources.reduce(function (filtered: DropdownItemProps[],
+//                (currentAPIResourcesListData?.apiResources.reduce(function (filtered: DropdownItemProps[],
+                (allAPIResourcesListData?.reduce(function (filtered: DropdownItemProps[],
                     apiResource: APIResourceInterface) {
 
                     const isCurrentAPIResourceSubscribed: boolean = subscribedAPIResourcesListData?.length === 0
@@ -180,29 +182,31 @@ export const AuthorizeAPIResource: FunctionComponent<AuthorizeAPIResourcePropsIn
             ]);
 
             // Add the current API resources to the all API resources list.
-            setAllAPIResourcesListData([ ...allAPIResourcesListData, ...currentAPIResourcesListData.apiResources ]);
+//            setAllAPIResourcesListData([ ...allAPIResourcesListData, ...currentAPIResourcesListData.apiResources ]);
 
             // Check if there are more API resources to be fetched.
-            let isAfterValueExists: boolean = false;
+//            let isAfterValueExists: boolean = false;
 
-            currentAPIResourcesListData?.links?.forEach((value: LinkInterface) => {
-                if (value.rel === APIResourcesConstants.NEXT_REL) {
-                    afterValue = value.href.split(`${APIResourcesConstants.AFTER}=`)[1];
+//            currentAPIResourcesListData?.links?.forEach((value: LinkInterface) => {
+//                if (value.rel === APIResourcesConstants.NEXT_REL) {
+//                    afterValue = value.href.split(`${APIResourcesConstants.AFTER}=`)[1];
+//
+//                    if (afterValue !== apiCallNextAfterValue) {
+//                        setAPICallNextAfterValue(afterValue);
+//                        isAfterValueExists = true;
+//                    }
+//                }
+//            });
 
-                    if (afterValue !== apiCallNextAfterValue) {
-                        setAPICallNextAfterValue(afterValue);
-                        isAfterValueExists = true;
-                    }
-                }
-            });
-
-            if (isAfterValueExists) {
-                mutatecurrentAPIResourcesList();
-            } else {
+//            if (isAfterValueExists) {
+//                mutatecurrentAPIResourcesList();
+//            } else {
                 setIsAPIResourcesListLoading(false);
-            }
-        }
-    }, [ currentAPIResourcesListData ]);
+//            }
+//        }
+    }, [ 
+//        currentAPIResourcesListData 
+    ]);
 
     /**
      * Assign scopes to the scopes dropdown options.
@@ -372,7 +376,8 @@ export const AuthorizeAPIResource: FunctionComponent<AuthorizeAPIResourcePropsIn
             </Modal.Header>
             <Modal.Content className="content-container" scrolling>
                 {
-                    iscurrentAPIResourcesListLoading || isAPIResourcesListLoading
+//                    iscurrentAPIResourcesListLoading || isAPIResourcesListLoading
+                    isAPIResourcesListLoading
                         ? <ContentLoader inline="centered" active />
                         : (
                             <Grid>

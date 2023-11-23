@@ -39,7 +39,6 @@ import { useTranslation } from "react-i18next";
 import { Form, Grid, Header, Icon, Input } from "semantic-ui-react";
 import { ScopeForm } from "./scope-form";
 import { APIResourcesConstants } from "../../../api-resources/constants";
-import { APIResourceInterface } from "../../../api-resources/models";
 import { FeatureConfigInterface } from "../../../core";
 import { Policy } from "../../constants/api-authorization";
 import { ApplicationTemplateIdTypes } from "../../models";
@@ -62,9 +61,9 @@ interface SubscribedAPIResourcesProps extends
      */
     templateId: string;
     /**
-     * List of all API Resources
+     * Total of API Resources available
      */
-    allAPIResourcesListData: APIResourceInterface[];
+    allAPIResourcesTotal: number;
     /**
      * Error when fetching all API Resources
      */
@@ -116,7 +115,7 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
     const {
         appId,
         templateId,
-        allAPIResourcesListData,
+        allAPIResourcesTotal,
         allAPIResourcesFetchRequestError,
         allAuthorizedScopes,
         subscribedAPIResourcesListData,
@@ -131,8 +130,8 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
     /**
      * Check if the place holders should be shown.
      */
-    const showPlaceHolders: boolean = allAPIResourcesListData?.length === 0 || 
-        subscribedAPIResourcesListData?.length === 0 || 
+    const showPlaceHolders: boolean = allAPIResourcesTotal === 0 ||
+        subscribedAPIResourcesListData?.length === 0 ||
         allAPIResourcesFetchRequestError != null ||
         subscribedAPIResourcesFetchRequestError !=  null ;
 
@@ -140,7 +139,7 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
 
     const [ activeSubscribedAPIResource, setActiveSubscribedAPIResource ] = useState<string>(null);
     const [ searchQuery, setSearchQuery ] = useState<string>(null);
-    const [ searchedSubscribedAPIResources, setSearchedSubscribedAPIResources ] = 
+    const [ searchedSubscribedAPIResources, setSearchedSubscribedAPIResources ] =
         useState<AuthorizedAPIListItemInterface[]>(null);
     const [ copyScopesValue, setCopyScopesValue ] = useState<string>(null);
     const [ m2mApplication, setM2MApplication ] = useState<boolean>(false);
@@ -197,12 +196,12 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
                     data-componentid={ `${componentId}-all-empty-placeholder-icon` }
                 />
             );
-        } else if (allAPIResourcesListData && allAPIResourcesListData.length === 0) {
+        } else if (allAPIResourcesTotal === 0) {
             return (
                 <EmptyPlaceholder
                     image={ getEmptyPlaceholderIllustrations().emptySearch }
                     action={ (
-                        isScopesAvailableForUpdate && 
+                        isScopesAvailableForUpdate &&
                             ( <Link
                                 data-componentid={ `${componentId}-link-api-resource-page` }
                                 onClick={ navigateToAPIResources }
@@ -223,7 +222,7 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
                 <EmptyPlaceholder
                     image={ getEmptyPlaceholderIllustrations().emptyList }
                     action={ (
-                        isScopesAvailableForUpdate && 
+                        isScopesAvailableForUpdate &&
                             ( <PrimaryButton
                                 data-componentid={ `${componentId}-empty-placeholder-sub-api-resource-button` }
                                 onClick={ (): void => setIsAuthorizeAPIResourceWizardOpen(true) }
@@ -272,7 +271,7 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
             case Policy.NO:
                 return I18n.instance.t("extensions:develop.applications.edit.sections.apiAuthorization" +
                     ".sections.policySection.form.fields.noPolicy.name");
-        
+
             default:
                 return I18n.instance.t("extensions:develop.applications.edit.sections.apiAuthorization" +
                     ".sections.policySection.form.fields.noPolicy.name");
@@ -282,7 +281,7 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
     /**
      * Resolves the header of the subscribed API Resources list.
      */
-    const resolveSubscribedAPIResourcesListHeader = (subscribedAPIResource: AuthorizedAPIListItemInterface): 
+    const resolveSubscribedAPIResourcesListHeader = (subscribedAPIResource: AuthorizedAPIListItemInterface):
         ReactElement => (
         <Header
             as="h6"
@@ -330,12 +329,12 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
     );
 
     /**
-     * Creates the actions of the subscribed API Resources list item. 
+     * Creates the actions of the subscribed API Resources list item.
      */
     const createAccordionAction = (subscribedAPIResource: AuthorizedAPIListItemInterface):
         SegmentedAccordionTitleActionInterface[] => {
 
-        return [ 
+        return [
             {
                 disabled: !isScopesAvailableForUpdate,
                 icon: "trash alternate",
@@ -343,7 +342,7 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
                 popoverText: t("extensions:develop.applications.edit.sections.apiAuthorization.sections" +
                     ".apiSubscriptions.unsubscribeAPIResourcePopOver"),
                 type: "icon"
-            } 
+            }
         ];
     };
 
@@ -403,7 +402,7 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
                 <EmphasizedSegment>
                     { getPlaceholders() }
                 </EmphasizedSegment>
-            ) 
+            )
             : (
                 <Grid className="mt-3">
                     <Grid.Row columns={ 1 }>
@@ -459,8 +458,8 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
                                                                             subscribedAPIResource)
                                                                     ) }
                                                                     hideChevron={ false }
-                                                                    actions={ 
-                                                                        createAccordionAction(subscribedAPIResource) 
+                                                                    actions={
+                                                                        createAccordionAction(subscribedAPIResource)
                                                                     }
                                                                 />
                                                                 <SegmentedAccordion.Content
@@ -470,7 +469,7 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
                                                                         `${componentId}-${subscribedAPIResource.id}
                                                                                     -content`
                                                                     }
-                                                                    children={ 
+                                                                    children={
                                                                         resolveSubscribedAPIResourcesListContent(
                                                                             subscribedAPIResource) }
                                                                 />
@@ -479,7 +478,7 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
                                                     )
                                                 }
                                             </SegmentedAccordion>
-                                        ) 
+                                        )
                                         : getPlaceholders()
                                 }
                             </ListLayout>
@@ -499,7 +498,7 @@ export const SubscribedAPIResources: FunctionComponent<SubscribedAPIResourcesPro
                                                 />
                                                 <Hint>
                                                     { t("extensions:develop.applications.edit.sections." +
-                                                    "apiAuthorization.sections.apiSubscriptions.scopesSection." + 
+                                                    "apiAuthorization.sections.apiSubscriptions.scopesSection." +
                                                     "copyScopesHint") }
                                                 </Hint>
                                             </Form.Field>

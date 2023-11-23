@@ -48,8 +48,8 @@ import {
     removeAuthorizedAPI
 } from "../../api/api-authorization";
 import useSubscribedAPIResources from "../../api/use-subscribed-api-resources";
-import { 
-    AuthorizedAPIListItemInterface, 
+import {
+    AuthorizedAPIListItemInterface,
     AuthorizedPermissionListItemInterface
 } from "../../models/api-authorization";
 
@@ -66,7 +66,7 @@ interface APIAuthorizationResourcesProps extends
 
 /**
  * API Authorization component.
- * 
+ *
  * @param props - Props related to API authorization component.
  */
 export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps> = (
@@ -84,7 +84,7 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
 
     const [ isSubAPIResourcesSectionLoading, setSubAPIResourcesSectionLoading ] = useState<boolean>(false);
     const [ isShownError, setIsShownError ] = useState<boolean>(false);
-    const [ removeSubscribedAPIResource, setRemoveSubscribedAPIResource ] = 
+    const [ removeSubscribedAPIResource, setRemoveSubscribedAPIResource ] =
         useState<AuthorizedAPIListItemInterface>(null);
     const [ isUnsubscribeAPIResourceLoading, setIsUnsubscribeAPIResourceLoading ] = useState<boolean>(false);
     const [ isAuthorizeAPIResourceWizardOpen, setIsAuthorizeAPIResourceWizardOpen ] = useState<boolean>(false);
@@ -118,7 +118,7 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
      */
     const isShownPlaceholder: boolean = !!subscribedAPIResourcesFetchRequestError
         || !!allAPIResourcesFetchRequestError
-        || allAPIResourcesListData?.apiResources.length === 0;
+        || allAPIResourcesListData?.totalResults === 0;
 
     /**
      * The following useEffect is used to handle if any error occurs while fetching API resources.
@@ -144,8 +144,8 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
      */
     useEffect(() => {
         setSubAPIResourcesSectionLoading(
-            isUpdateData || 
-            isAllAPIResourcesListLoading || 
+            isUpdateData ||
+            isAllAPIResourcesListLoading ||
             isSubscribedAPIResourcesListLoading
         );
     }, [ isUpdateData, isAllAPIResourcesListLoading, isSubscribedAPIResourcesListLoading ]);
@@ -156,11 +156,11 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
     useEffect(() => {
         if (subscribedAPIResourcesListData?.length > 0) {
             let authorizedScopes: AuthorizedPermissionListItemInterface[] = [];
-            
+           
             subscribedAPIResourcesListData.forEach((subscribedAPIResource: AuthorizedAPIListItemInterface) => {
                 authorizedScopes = authorizedScopes.concat(subscribedAPIResource.authorizedScopes);
             });
-            
+           
             setAllAuthorizedScopes(authorizedScopes);
         }
     }, [ subscribedAPIResourcesListData ]);
@@ -181,14 +181,13 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
      */
     useEffect(() => {
         if (allAPIResourcesListData && subscribedAPIResourcesListData) {
-            setIsAllAPIsSubscribed(allAPIResourcesListData.apiResources?.length 
-                === subscribedAPIResourcesListData.length);
+            setIsAllAPIsSubscribed(allAPIResourcesListData.totalResults === subscribedAPIResourcesListData.length);
         }
     }, [ allAPIResourcesListData, subscribedAPIResourcesListData ]);
 
     /**
      * Check scopes available for update API resources.
-     * 
+     *
      * @returns `true` if scopes are available for update API resources.
      */
     const isScopesAvailableForUpdate = (): boolean => {
@@ -202,7 +201,7 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
     useEffect(() => {
         const isScopesAvailable: boolean = isScopesAvailableForUpdate();
         const hideAuthorizeAPIResourceButton: boolean = !isScopesAvailable
-           || allAPIResourcesListData?.apiResources?.length === 0 
+           || allAPIResourcesListData?.totalResults === 0
            || subscribedAPIResourcesListData?.length === 0;
 
         setHideAuthorizeAPIResourceButton(hideAuthorizeAPIResourceButton);
@@ -252,9 +251,9 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
      * @returns `void`
      */
     const handleCreateAPIResource = (
-        apiId: string, 
-        scopes: string[], 
-        policyIdentifier: string, 
+        apiId: string,
+        scopes: string[],
+        policyIdentifier: string,
         callback: () => void
     ): void => {
 
@@ -288,13 +287,13 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
 
     /**
      * Bulk change the all authorized scopes.
-     * 
+     *
      * @param updatedScopes - Updated scopes.
      * @param removed - `true` if scope removed.
-     * 
+     *
      * @returns `void`
      */
-    const bulkChangeAllAuthorizedScopes = (updatedScopes: AuthorizedPermissionListItemInterface[], 
+    const bulkChangeAllAuthorizedScopes = (updatedScopes: AuthorizedPermissionListItemInterface[],
         removed: boolean): void => {
 
         if (removed) {
@@ -312,7 +311,7 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
 
     return (
         <Fragment>
-            <EmphasizedSegment 
+            <EmphasizedSegment
                 padded="very"
                 loading={ isSubAPIResourcesSectionLoading }
                 data-componentid={ `${componentId}-sub-api-resources-section` }>
@@ -335,14 +334,13 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
                         </Grid.Column>
                         <Grid.Column computer={ 4 } mobile={ 6 }>
                             {
-                                !hideAuthorizeAPIResourceButton 
+                                !hideAuthorizeAPIResourceButton
                                 && (
-                                    <Popup 
+                                    <Popup
                                         content= {
                                             isAllAPIsSubscribed
-                                                ? t("extensions:develop.applications.edit.sections." +
-                                                            "apiAuthorization.sections.apiSubscriptions." + 
-                                                            "allAPIAuthorizedPopOver")
+                                                ? t("extensions:develop.applications.edit.sections.apiAuthorization." +
+                                                        "sections.apiSubscriptions.allAPIAuthorizedPopOver")
                                                 : null
                                         }
                                         position="top center"
@@ -350,17 +348,17 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
                                         trigger={ (
                                             <span>
                                                 <PrimaryButton
-                                                    data-componentid={ "subscribed-api-resources" + 
+                                                    data-componentid={ "subscribed-api-resources" +
                                                         "-subcribe-api-resource-button" }
                                                     size="medium"
                                                     floated="right"
-                                                    onClick={ (): void => 
+                                                    onClick={ (): void =>
                                                         setIsAuthorizeAPIResourceWizardOpen(true) }
                                                     disabled={ isAllAPIsSubscribed }
                                                 >
                                                     <Icon name="add" />
                                                     { t("extensions:develop.applications.edit.sections." +
-                                                            "apiAuthorization.sections.apiSubscriptions.buttons." + 
+                                                            "apiAuthorization.sections.apiSubscriptions.buttons." +
                                                             "subAPIResource") }
                                                 </PrimaryButton>
                                             </span>
@@ -375,7 +373,7 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
                 <SubscribedAPIResources
                     appId={ appId }
                     templateId={ templateId }
-                    allAPIResourcesListData={ allAPIResourcesListData?.apiResources }
+                    allAPIResourcesTotal={ allAPIResourcesListData?.totalResults }
                     allAPIResourcesFetchRequestError={ allAPIResourcesFetchRequestError }
                     allAuthorizedScopes={ allAuthorizedScopes }
                     subscribedAPIResourcesListData={ subscribedAPIResourcesListData }
@@ -430,7 +428,7 @@ export const APIAuthorization: FunctionComponent<APIAuthorizationResourcesProps>
             }
             {
                 isAuthorizeAPIResourceWizardOpen && (
-                    <AuthorizeAPIResource 
+                    <AuthorizeAPIResource
                         templateId={ templateId }
                         subscribedAPIResourcesListData={ subscribedAPIResourcesListData }
                         closeWizard={ (): void => setIsAuthorizeAPIResourceWizardOpen(false) }
